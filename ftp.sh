@@ -12,7 +12,7 @@ echo -e $logfiles
 
 
 lftp -u $ftpuser,$ftppassword $ftphost <<EOF
-set ssl:verify-certificate no
+set ssl:verify-certificate yes
 cd $ftpdirectory
 $logfiles
 bye
