@@ -56,14 +56,23 @@ rm inventory.json
 #echo 100 ; sleep 0.2
 #) | dialog --gauge "Préparation du stockage NFS..." 10 60 0
 
-# Test RAM
+#test RAM
+ramfree=$(free -m | awk '/Mem:/ {print $4}')
+ramtest=$((ramfree - 100))
 
-ramfree=$(free -m | grep Mem | awk '{print $4}')
-ramtest=$(($ramfree - 100))
+memtester $ramtest 1 >"$logpath/memtest.log" &
+pid=$!
 
 (
-echo 10
-memtester $ramtest 1 >"$logpath/memtest.log"
+for i in $(seq 10 99); do
+  if ! kill -0 $pid 2>/dev/null; then
+    break
+  fi
+  echo $i
+  sleep 1
+done
+
+wait $pid
 echo 100
 ) | dialog --gauge "Test RAM en cours..." 10 60 0
 
