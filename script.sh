@@ -58,14 +58,25 @@ rm inventory.json
 
 # Test RAM
 
-ramfree=$(free -m | grep Mem | awk '{print $4}')
-ramtest=$(($ramfree - 100))
+ramfree=$(free -m | awk '/Mem:/ {print $4}')
+ramtest=$((ramfree - 100))
+
+memtester ${ramtest}M 1 > "$logpath/memtest.log" 2>&1 &
+pid=$!
 
 (
-echo 10
-memtester $ramtest 1 >"$logpath/memtest.log"
+progress=10
+while kill -0 $pid 2>/dev/null; do
+    echo $progress
+    progress=$((progress + 2))
+    [ $progress -gt 95 ] && progress=95
+    sleep 1
+done
+
 echo 100
 ) | dialog --gauge "Test RAM en cours..." 10 60 0
+
+wait $pid
 
 # Test SMART
 
