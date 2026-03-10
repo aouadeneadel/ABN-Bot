@@ -18,10 +18,10 @@ apt install -y -f dialog
 mkdir $logpath
 
 #Installation de l'agent glpi inventory
-rm glpi-agent-*-with-snap-linux-installer.pl
+rm glpi-agent-*-linux-installer.pl
 wget $glpiagentinstallurl
-perl glpi-agent-*-with-snap-linux-installer.pl
-rm glpi-agent-*-with-snap-linux-installer.pl
+perl glpi-agent-*-linux-installer.pl
+rm glpi-agent-*-linux-installer.pl
 
 #On rajoute les identifiants dans le fichier de configuration glpi-agent
 sed -i "s|user =|user = $httpuser|g" /etc/glpi-agent/agent.cfg
