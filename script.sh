@@ -52,11 +52,26 @@ if [ "$ramtest" -le 0 ]; then
     exit 1
 fi
 
+# Lance memtester en arrière-plan
+memtester "${ramtest}M" 1 >"$logpath/memtest.log" 2>&1 &
+memtester_pid=$!
+
+# Anime la progression pendant que memtester tourne
 (
-echo 10
-memtester "${ramtest}M" 1 >"$logpath/memtest.log" 2>&1
+pct=0
+while kill -0 "$memtester_pid" 2>/dev/null; do
+    echo $pct
+    # Avance rapidement jusqu'à 90, puis ralentit pour ne pas dépasser avant la fin
+    if [ $pct -lt 90 ]; then
+        pct=$(( pct + 2 ))
+    fi
+    sleep 2
+done
 echo 100
 ) | dialog --gauge "Test RAM en cours..." 10 60 0
+
+# Attendre la fin propre de memtester (au cas où il finit avant la gauge)
+wait "$memtester_pid"
 
 # Test SMART
 (
@@ -111,7 +126,7 @@ echo 100; sleep 0.2
 ) | dialog --gauge "Nettoyage des logs inutiles..." 10 60 0
 
 # Effacement (Nwipe)
-# nwipe --method="$nwipemethod" --nousb --autonuke --nowait --logfile="$logpath/nwipe.log"
+nwipe --method="$nwipemethod" --nousb --autonuke --nowait --logfile="$logpath/nwipe.log"
 
 # Fin
 (
