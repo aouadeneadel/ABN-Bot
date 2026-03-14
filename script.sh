@@ -116,12 +116,16 @@ echo 100; sleep 0.2
 
 # Nettoyage
 (
+shopt -s nullglob
 echo 25; sleep 0.2
-rm -f "$logpath"/*-part*.log
+files=("$logpath"/*-part*.log)
+[ ${#files[@]} -gt 0 ] && rm -f "${files[@]}"
 echo 50; sleep 0.2
-rm -f "$logpath"/*DVD*.log
+files=("$logpath"/*DVD*.log)
+[ ${#files[@]} -gt 0 ] && rm -f "${files[@]}"
 echo 75; sleep 0.2
-rm -f "$logpath"/*CD-ROM*.log
+files=("$logpath"/*CD-ROM*.log)
+[ ${#files[@]} -gt 0 ] && rm -f "${files[@]}"
 echo 100; sleep 0.2
 ) | dialog --gauge "Nettoyage des logs inutiles..." 10 60 0
 
