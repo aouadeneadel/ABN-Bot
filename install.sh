@@ -14,6 +14,8 @@ apt install -y -f snap
 #installation de l'interface dialog
 apt install -y -f dialog
 
+apt install enscript ghostscript jq curl
+
 #création du répertoire log
 mkdir $logpath
 
