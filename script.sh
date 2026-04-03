@@ -95,7 +95,7 @@ echo 10; sleep 0.2
 PDF_FILE="$logpath/certificat_effacement_${ninventaire}_$(date +%Y%m%d_%H%M%S).pdf"
 
 # Téléchargement du logo si absent
-LOGO_FILE="/tmp/logo_org.jpg"
+LOGO_FILE="abn.png"
 if [ ! -f "$LOGO_FILE" ]; then
     curl -s -L --max-time 10 \
         "https://www.telecom-valley.fr/wp-content/uploads/2022/06/Banque-du-numerique_annuaire.jpg" \
